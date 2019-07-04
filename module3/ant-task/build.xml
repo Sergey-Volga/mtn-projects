@@ -1,0 +1,53 @@
+<project name="TestProject" default="dist" basedir=".">
+
+  <property name="src" location="src"/>
+  <property name="test" location="test"/>
+  <property name="build" location="build"/>
+  <property name="dist"  location="dist"/>
+
+  <target name="init">
+    <mkdir dir="${build}"/>
+  </target>
+
+  <target name="compile" depends="init" >
+    <javac srcdir="${src}" destdir="${build}" includeantruntime="false">
+      <classpath>
+        <pathelement path="lib/commons-collections-3.2.1.jar"/>
+      </classpath>
+    </javac>
+  </target>
+
+  <target name="dist" depends="compile" >
+    <mkdir dir="${dist}"/>
+    <jar jarfile="${dist}/Project.jar" basedir="${build}">
+      <manifest>
+        <attribute name="Main-Class" value="com.test.Project"/>
+      </manifest>
+    </jar>
+  </target>
+
+  <target name="clean">
+    <delete dir="${build}"/>
+    <delete dir="${dist}"/>
+  </target>
+
+  <target name="test-compile" depends="compile">
+    <javac srcdir="${test}" destdir="${build}" includeantruntime="false">
+      <classpath>
+        <pathelement location="${build}"/>
+        <pathelement location="lib/junit-4.11.jar"/>
+      </classpath>
+    </javac>
+  </target>
+
+  <target name="test" depends="test-compile">
+    <junit printsummary="yes">
+      <classpath>
+        <pathelement location="${build}"/>
+        <pathelement location="lib/junit-4.11.jar"/>
+      </classpath>
+      <test name="com.test.UnitTest"/>
+    </junit>
+  </target>
+
+</project>
